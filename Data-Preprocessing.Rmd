@@ -1,0 +1,124 @@
+---
+title: "CS-579 Project-2 (Fake News Classification)"
+author: "Joseph Rithvik Reddy Mettu(A20505019) || Ganya Janardhan(A20517083)"
+output:
+  html_document:
+    toc: yes
+    df_print: paged
+  html_notebook:
+    toc: yes
+    toc_float: yes
+---
+
+
+## Loading train data
+```{r}
+fake <- "C:\\Users\\rithv\\Desktop\\Assignments\\OSNA CS - 579\\Project - 2\\option1-data(1)(1)\\train.csv"
+fake <- read.csv(fake, header = TRUE, sep = ",")
+nrow(fake)
+fake
+```
+
+### Checking Data
+```{r}
+fake$title2_en[1]
+
+```
+
+
+## Loading Test Data
+```{r}
+fake_test <- "C:\\Users\\rithv\\Desktop\\Assignments\\OSNA CS - 579\\Project - 2\\option1-data(1)(1)\\test.csv"
+fake_test <- read.csv(fake_test, header = TRUE, sep = ",")
+nrow(fake_test)
+fake_test
+
+```
+
+## Data Preprocessing
+### Converting strings to lower case
+#### Train data
+```{r}
+fake$title1_en <- tolower(fake$title1_en)
+fake$title2_en <- tolower(fake$title2_en)
+print(fake$title1_en)
+```
+
+#### Test Data
+```{r}
+fake_test$title1_en <- tolower(fake_test$title1_en)
+fake_test$title2_en <- tolower(fake_test$title2_en)
+print(fake_test$title1_en)
+
+```
+
+### Stopwords Removal
+#### Train Data
+```{r}
+library(tidyverse)
+#install.packages("tm")
+library(tm)
+
+
+stop_words <- stopwords("english")
+print(stop_words)
+fake$title1_en <- removeWords(fake$title1_en, stop_words)
+fake$title2_en <- removeWords(fake$title2_en, stop_words)
+
+print(fake %>% select(title1_en, title2_en))
+
+
+
+```
+
+#### Test Data
+```{r}
+fake_test$title1_en <- removeWords(fake_test$title1_en, stop_words)
+fake_test$title2_en <- removeWords(fake_test$title2_en, stop_words)
+
+print(fake_test %>% select(title1_en, title2_en))
+
+```
+
+### Punctuations Removal
+#### Train Data
+```{r}
+fake$title1_en <- gsub("[[:punct:]]", "", fake$title1_en)
+fake$title2_en <- gsub("[[:punct:]]", "", fake$title2_en)
+
+print(fake %>% select(title1_en, title2_en))
+
+```
+
+#### Test Data
+```{r}
+fake_test$title1_en <- gsub("[[:punct:]]", "", fake_test$title1_en)
+fake_test$title2_en <- gsub("[[:punct:]]", "", fake_test$title2_en)
+
+print(fake_test %>% select(title1_en, title2_en))
+
+```
+
+### Removal of Missing values
+#### Train Data
+```{r}
+fake <- na.omit(fake)
+
+```
+
+#### Test Data
+```{r}
+fake_test <- na.omit(fake_test)
+
+```
+
+
+### Saving PreProcessed Train Data 
+```{r}
+write.csv(fake,"C:\\Users\\rithv\\Desktop\\Assignments\\OSNA CS - 579\\Project - 2\\prepro_train.csv")
+```
+
+### Saving PreProcessed Test Data
+```{r}
+write.csv(fake_test,"C:\\Users\\rithv\\Desktop\\Assignments\\OSNA CS - 579\\Project - 2\\prepro_test.csv")
+```
